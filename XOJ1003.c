@@ -26,7 +26,9 @@ int main()
     for(i=1;i<=N;i++)
     {scanf("%d",&a[i]);}
     insert_sort(a,N);
-    for(i=1;i<=N;i++)
-    {printf("%d ",a[i]);}
+    printf("%d",a[1]);
+    for(i=2;i<=N;i++)
+    {printf(" %d",a[i]);}
+    printf("\n");
     return 0;
 }
