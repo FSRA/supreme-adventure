@@ -23,8 +23,8 @@ void sort(int data[],int low,int high)
 {
     if(low>high) return;
     int m=partition(data,low,high);
-    partition(data,low,m-1);
-    partition(data,m+1,high);
+    sort(data,low,m-1);
+    sort(data,m+1,high);
 }
 
 int main()
