@@ -1,0 +1,48 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+void swap(int a,int b)
+{
+    int temp;
+    temp=a;
+    b=temp;
+    a=b;
+}
+int Partition(int a[],int p,int r)
+{
+    int x,i,j;
+    x=a[r];
+    i=p-1;
+    for(j=p;j<r;j++)
+    {
+        if(a[j]<=x)
+        {
+            i=i+1;
+            swap(a[i],a[j]);
+        }
+    }
+    swap(a[i+1],a[r]);
+    return i+1;
+}
+
+void QuickSort(int a[],int p,int r)
+{
+    int q;
+    if(p<r)
+    {
+        q=Partition(a,p,r);
+        QuickSort(a,p,q-1);
+        QuickSort(a,q+1,r);
+    }
+}
+
+int main()
+{
+    int a[11],i;
+    for(i=1;i<=10;i++)
+    scanf("%d",&a[i]);
+    QuickSort(a,1,10);
+    for(i=1;i<=10;i++)
+    printf("%d ",a[i]);
+    return 0;
+}
