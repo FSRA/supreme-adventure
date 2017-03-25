@@ -1,35 +1,32 @@
 #include<stdio.h>
 #include<stdlib.h>
 #define MAX 130
-int maxSum(int b[],int n)//最大字段和函数
+int maxSum(int b[],int n)
 {
-    int i,sum=0,res=-9999;
+    int max=b[1];
+    int sum=0;
+    int i;
     for(i=1;i<=n;i++)
     {
-        sum+=b[i];
-        if(sum>res)
-        res=sum;
-        if(sum<0)
-        sum=0;
+        if(sum<0) sum=b[i];
+        else sum+=b[i];
+        if(sum>max) max=sum;
     }
-    return res;
+    return max;
 }
 
-int solve(int a[][MAX],int n)//传参不能写成a[][]
+int solve(int a[][MAX],int n)
 {
-    int i,j,k,b[MAX],result=0;
-    for(i=1;i<=n;i++)//从i行到j行 k列的和，注意理解循环变量顺序
+    int i,j,k,b[MAX];
+    int result=a[1][1];
+    for(i=1;i<=n;i++)
     {
         for(k=1;k<=n;k++) b[k]=0;
         for(j=i;j<=n;j++)
         {
             for(k=1;k<=n;k++)
-            {
-                b[k]+=a[j][k];
-                if(maxSum(b,k)>=result)
-                result=maxSum(b,k);
-            }
-
+            b[k]+=a[j][k];
+            if(maxSum(b,n)>result) result=maxSum(b,n);
         }
     }
     return result;
@@ -37,12 +34,13 @@ int solve(int a[][MAX],int n)//传参不能写成a[][]
 
 int main()
 {
-    int n,i,j,a[MAX][MAX];
+    int i,j,n,a[MAX][MAX];
     scanf("%d",&n);
     for(i=1;i<=n;i++)
+    {
         for(j=1;j<=n;j++)
         scanf("%d",&a[i][j]);
-
-    printf("%d",solve(a,n));
+    }
+    printf("%d\n",solve(a,n));
     return 0;
 }
