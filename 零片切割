@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+#define SIZE 200
+
+int W,besth=32767,high,n;
+
+struct piece
+{
+    int h;
+    int w;
+    int x;
+    int y;
+};
+struct piece best[SIZE];
+
+int Max(struct piece a[],int i)
+{
+    int h=0,j;
+    for(j=1;j<=i;j++)
+    {
+        if(h<a[j].h+a[j].y)
+        h=a[j].h+a[j].y;
+    }
+    return h;
+}
+
+int Backtrack(struct piece a[],int i,int xx,int yy)
+{
+    int j;
+    if(a[i].w+xx>W)
+    return 0;
+    else
+    {
+        if(i>n)
+        {
+            high=Max(a,n);
+            if(high<besth||besth==32767)
+            {
+                besth=high;
+                for(j=1;j<=n;j++)
+                {
+                    best[j].x=a[j].x;
+                    best[j].y=a[j].y;
+                    best[j].w=a[j].w;
+                    best[j].h=a[j].h;
+                }
+            }
+            return 1;
+        }
+        else
+        {
+            if(besth==32767||Max(a,i)<besth)
+            {
+                a[i].x=xx;
+                a[i].y=yy;
+                if(Backtrack(a,i+1,xx+a[i].w,yy)==0)
+                    Backtrack(a,i+1,0,Max(a,i));
+                Backtrack(a,i+1,xx,yy+a[i].h);
+            }
+            return 2;
+        }
+    }
+}
+int partition(struct piece a[],int low,int high)
+{
+    int t,mid;
+    mid=(high+low)/2;
+    t=a[mid].h;
+    a[mid].h=a[low].h;
+    a[low].h=t;
+
+    while(low<high)
+    {
+    while(low<high&&a[high].h>=t)
+        high--;
+    a[low].h=a[high].h;
+    a[low].w=a[high].w;
+    while(low<high&&a[low].h<=t)
+        low++;
+    a[high].h=a[low].h;
+    a[high].w=a[low].w;
+    }
+    a[low].h=t;
+    return low;
+}
+
+void sort(struct piece a[],int low,int high)
+{
+    if(low>high) return;
+    int m=partition(a,low,high);
+    sort(a,low,m-1);
+    sort(a,m+1,high);
+}
+
+int main()
+{
+    struct piece a[SIZE];
+    memset(a,0,sizeof(a));
+    int i;
+    clock_t t1,t2;
+    scanf("%d",&n);
+    scanf("%d",&W);
+    for(i=1;i<=n;i++)
+    {
+        scanf("%d%d",&a[i].h,&a[i].w);
+        a[i].x=0;
+        a[i].y=0;
+    }
+    sort(a,1,n);
+    t1=clock();
+    Backtrack(a,1,0,0);
+    t2=clock();
+    printf("H=%d\n",besth);
+    printf("time=%f\n",(double)(t2-t1)/(double)CLOCKS_PER_SEC);
+    return 0;
+}
