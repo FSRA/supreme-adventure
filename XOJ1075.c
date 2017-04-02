@@ -17,7 +17,7 @@ void SPFA(){//最短路算法
         for(int i=1;i<=N;i++){
             if(Map[tp][i]+dis[tp]>=dis[i]) continue;
             dis[i]=dis[tp]+Map[tp][i];
-            if(!vis[i]) Q.push(i),vis[i]=1;
+            if(!vis[i]) {Q.push(i);vis[i]=1;}
         }
     }
     printf("%d\n",dis[N]);
@@ -25,7 +25,6 @@ void SPFA(){//最短路算法
 
 
 int main(){
-    //freopen("in.txt","r",stdin);
     while(cin>>N){
         for(int i=1;i<=N;i++) for(int j=1;j<=N;j++)
             scanf("%d",Map[i]+j);
@@ -33,3 +32,4 @@ int main(){
     }
     return 0;
 }
+
