@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+#define MAXN 505
+int map[MAXN][MAXN];
+int vis[MAXN];//记录v2中每个点是否被搜索过
+int match[MAXN];//记录v2中的点在v1中所匹配的点的编号
+int n,k;
+
+int dfs(int u)
+{
+    int v;
+    for(v=1;v<=n;v++)
+    {
+        if(map[u][v]&&!vis[v])
+        {
+            vis[v]=1;
+            if(match[v]==-1||dfs(match[v]))
+            {
+                match[v]=u;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int MaxMatch()
+{
+    int u,ret=0;
+    memset(match,-1,sizeof match);
+    for(u=1;u<=n;u++)
+    {
+        memset(vis,0,sizeof vis);
+        if(dfs(u))
+        ret++;
+    }
+    return ret;
+}
+
+int main()
+{
+    while(scanf("%d%d",&n,&k)==2)
+    {
+        int x,y,i,ans;
+        memset(map,0,sizeof map);
+        for(i=1;i<=k;i++)
+        {
+            scanf("%d%d",&x,&y);
+            map[x][y]=1;
+        }
+        ans=MaxMatch();
+        printf("%d\n",ans);
+    }
+    return 0;
+}
