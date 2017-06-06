@@ -1,0 +1,102 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#define maxn 100050
+
+int N,M;
+int pre[maxn];
+struct edge
+{
+    int u;int v;int w;
+
+}E[maxn*2];
+
+int find(int x)
+{
+    int t=x;
+    while(pre[t]!=t)
+    t=pre[t];
+    while(x!=t)
+    pre[x]=t,x=pre[x];
+    return t;
+}
+
+void kruscal()
+{
+    int cnt=1,ans=0;
+    int i,u,v,w,fu,fv;
+    for(i=1;i<=N;i++)
+    pre[i]=i;
+
+    for(i=0;i<M;i++)
+    {
+         u=E[i].u;v=E[i].v;w=E[i].w;
+         fu=find(u);fv=find(v);
+         if(fu==fv) continue;
+
+         ans+=w;
+         pre[fu]=fv;
+         if(++cnt==N)
+         break;
+    }
+    printf("%d\n",cnt==N?ans:-1);
+}
+
+int partition(struct edge arr[],int low,int high)
+{
+    int t,pivotkey;
+    t=(high+low)/2;//WA
+    t=rand()%(high-low)+low;//RE 浮点数错误有除以0的情况
+
+    arr[0].u=arr[t].u;
+    arr[t].u=arr[low].u;
+    arr[low].u=arr[0].u;
+
+    arr[0].v=arr[t].v;
+    arr[t].v=arr[low].v;
+    arr[low].v=arr[0].v;
+
+    arr[0].w=arr[t].w;
+    arr[t].w=arr[low].w;
+    arr[low].w=arr[0].w;
+
+    pivotkey=arr[low].w;
+
+     while(low<high)
+    {
+        while(low<high&&arr[high].w>=pivotkey)
+        high--;
+        arr[low].w=arr[high].w;
+        arr[low].u=arr[high].u;
+        arr[low].v=arr[high].v;
+        while(low<high&&arr[low].w<=pivotkey)
+        low++;
+        arr[high].w=arr[low].w;
+        arr[high].u=arr[low].u;
+        arr[high].v=arr[low].v;
+    }
+    arr[low].w=arr[0].w;
+    arr[low].v=arr[0].v;
+    arr[low].u=arr[0].u;
+    return low;
+}
+
+
+void quicksort(struct edge arr[],int low,int high)
+{
+    if(low>high) return;
+    int m=partition(arr,low,high);
+    quicksort(arr,low,m-1);
+    quicksort(arr,m+1,high);
+}
+
+int main()
+{
+    int i;
+    scanf("%d%d",&N,&M);
+    for(i=0;i<M;i++)
+    scanf("%d%d%d",&E[i].u,&E[i].v,&E[i].w);
+    quicksort(E,0,M-1);
+    kruscal();
+    return 0;
+}
