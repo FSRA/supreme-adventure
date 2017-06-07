@@ -1,0 +1,97 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define maxn 5000
+
+int N,n;
+int pre[maxn];
+
+struct edge
+{
+    int u;int v;int w;
+}E[maxn];
+
+int find(int x)
+{
+    int t=x;
+    while(pre[t]!=t)
+    t=pre[t];
+    while(x!=t)
+    pre[x]=t,x=pre[x];
+    return t;
+}
+void kruscal()
+{
+    int cnt=1,ans=0;
+    int i,u,v,w,fu,fv;
+    for(i=1;i<=N;i++)
+    pre[i]=i;
+
+    for(i=0;i<n;i++)
+    {
+        u=E[i].u;v=E[i].v;w=E[i].w;
+        fu=find(u);fv=find(v);
+        if(fu==fv) continue;
+
+        ans+=w;
+        pre[fu]=fv;
+        if(++cnt==N)
+        break;
+    }
+    printf("%d\n",ans);
+}
+
+int partition(struct edge arr[],int low,int high)
+{
+    int t,pivotkey;
+    t=low;
+    struct edge temp;
+    temp.u=arr[t].u;
+    temp.v=arr[t].v;
+    temp.w=arr[t].w;
+
+    pivotkey=arr[low].w;
+    while(low<high)
+    {
+        while(low<high&&arr[high].w>=pivotkey)
+        high--;
+            arr[low].w=arr[high].w;
+            arr[low].u=arr[high].u;
+            arr[low].v=arr[high].v;
+        while(low<high&&arr[low].w<=pivotkey)
+        low++;
+            arr[high].w=arr[low].w;
+            arr[high].u=arr[low].u;
+            arr[high].v=arr[low].v;
+    }
+        arr[low].w=temp.w;
+        arr[low].v=temp.v;
+        arr[low].u=temp.u;
+        return low;
+
+}
+
+void quicksort(struct edge arr[],int low,int high)
+{
+    if(low>high) return;
+    int m=partition(arr,low,high);
+    quicksort(arr,low,m-1);
+    quicksort(arr,m+1,high);
+}
+
+int main()
+{
+    int i;
+    while(scanf("%d",&N)!=EOF)
+    {
+        if(N==0) break;
+        else
+        {
+           n=N*(N-1)/2;
+           for(i=0;i<n;i++)
+           scanf("%d%d%d",&E[i].u,&E[i].v,&E[i].w);
+           quicksort(E,0,n-1);
+           kruscal();
+        }
+    }
+    return 0;
+}
