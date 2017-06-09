@@ -1,0 +1,110 @@
+#include <iostream>
+#include <climits>
+using namespace std;
+#define N 25
+int d[N][N];
+int x[N];
+int cc,n;
+int bestc=INT_MAX;
+int sum;
+
+void backtrack(int t)
+{
+    if(t>n)
+    {
+        if(d[x[n]][1] > 0 && cc+d[x[n]][1] < bestc || bestc==0)
+        {
+            bestc=cc+d[x[n]][1];
+            sum++;
+        }
+    }
+    else
+    {
+        for(int i=t;i<=n;i++)
+        {
+            if(d[x[t-1]][x[i]] > 0 && cc + d[x[t-1]][x[i]] < bestc || bestc==0)
+            {
+                swap(x[t],x[i]);
+                cc+=d[x[t-1]][x[t]];
+                backtrack(t+1);
+                cc-=d[x[t-1]][x[t]];
+                swap(x[t],x[i]);
+            }
+        }
+    }
+}
+
+int main()
+{
+    int i,j;
+    cin>>n;
+    for(i=1;i<=n;i++)
+        for(j=1;j<=n;j++)
+            cin>>d[i][j];
+    for(i=1;i<=n;i++)
+            x[i]=i;
+        backtrack(2);
+        cout<<bestc<<endl;
+
+    return 0;
+}
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<limits.h>
+#define N 25
+int d[N][N];
+int x[N];
+int cc,n;
+int bestc=INT_MAX;
+int sum;
+
+void swap(int a,int b)
+{
+    int t;
+    t=a;a=b;b=t;
+}
+void backtrack(int t)
+{
+    int i;
+    if(t>n)
+    {
+        if(d[x[n]][1] > 0 && cc+d[x[n]][1] < bestc || bestc==0)
+        {
+            bestc=cc+d[x[n]][1];
+            sum++;
+        }
+    }
+    else
+    {
+        for(i=t;i<=n;i++)
+        {
+            if(d[x[t-1]][x[i]] > 0 && cc + d[x[t-1]][x[i]] < bestc || bestc==0)
+            {
+                swap(x[t],x[i]);
+                cc+=d[x[t-1]][x[t]];
+                backtrack(t+1);
+                cc-=d[x[t-1]][x[t]];
+                swap(x[t],x[i]);
+            }
+        }
+    }
+}
+
+int main()
+{
+    int i,j;
+    scanf("%d",&n);
+    for(i=1;i<=n;i++)
+        for(j=1;j<=n;j++)
+            scanf("%d",&d[i][j]);
+    for(i=1;i<=n;i++)
+            x[i]=i;
+        backtrack(2);
+        printf("%d",bestc);
+
+    return 0;
+}
+
+
+
